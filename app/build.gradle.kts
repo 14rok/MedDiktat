@@ -52,6 +52,25 @@ android {
     }
 }
 
+// Pins Java and Kotlin compilation to a JDK 17 toolchain, independent of the
+// JVM the Gradle daemon happens to run on. Without this, Gradle falls back to
+// the daemon's JVM and the build fails if that is a JRE without javac.
+kotlin {
+    jvmToolchain(17)
+}
+
+// The Hilt plugin creates its own JavaCompile task, which does not inherit the
+// toolchain above and would fall back to the daemon's JVM. Pin every
+// JavaCompile task explicitly so third-party plugins are covered too.
+val javaToolchains = extensions.getByType(JavaToolchainService::class.java)
+tasks.withType(JavaCompile::class.java).configureEach {
+    javaCompiler.set(
+        javaToolchains.compilerFor {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        },
+    )
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
 
