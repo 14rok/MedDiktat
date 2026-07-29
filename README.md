@@ -7,13 +7,15 @@ automatische Synchronisation.
 
 ## Build & Start
 
-Das Projekt ist ein Standard-Gradle-Android-Projekt.
+Das Projekt ist ein Standard-Gradle-Android-Projekt. Der Gradle-Wrapper ist
+enthalten (Gradle 8.13), ein separat installiertes Gradle wird nicht benötigt.
 
-1. In **Android Studio** (Ladybug / AGP 8.7+) öffnen. Android Studio ergänzt den
-   Gradle-Wrapper (`gradlew`, `gradle-wrapper.jar`) automatisch.
-   - Alternativ auf der Kommandozeile mit installiertem Gradle 8.9+:
-     `gradle wrapper` ausführen, danach `./gradlew :app:assembleDebug`.
+1. In **Android Studio** (Ladybug / AGP 8.7+) öffnen – oder auf der
+   Kommandozeile `./gradlew :app:assembleDebug` ausführen.
 2. Auf Gerät/Emulator mit **API 26+** (Android 8.0) ausführen.
+
+Zum Kompilieren wird ein vollständiges **JDK 17** benötigt; eine JRE genügt
+nicht, da Gradle eine Toolchain mit `javac` verlangt.
 
 Toolchain: Kotlin 2.0.20 · AGP 8.7.3 · compileSdk/targetSdk 35 · minSdk 26 ·
 Room 2.6.1 · Hilt 2.52 · Material 3 · JDK 17.
