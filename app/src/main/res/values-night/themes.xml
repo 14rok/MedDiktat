@@ -1,0 +1,4 @@
+<resources>
+    <!-- Dark-Variante des Launch-/Fenster-Themes (System-Dark-Mode). -->
+    <style name="Theme.MedDiktat" parent="android:Theme.Material.NoActionBar" />
+</resources>

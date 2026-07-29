@@ -1,0 +1,8 @@
+<resources>
+    <!--
+        Schlankes Launch-/Fenster-Theme. Das eigentliche Farb- und Dark-Mode-Handling
+        übernimmt Compose (Material 3) zur Laufzeit. Dieses Theme deckt nur den
+        Zeitraum bis zum ersten Compose-Frame ab (Light-Variante).
+    -->
+    <style name="Theme.MedDiktat" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

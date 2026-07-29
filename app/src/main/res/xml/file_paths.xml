@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--
+        Nur der interne Diktat-Ordner wird über den FileProvider freigegeben.
+        Entspricht File(context.filesDir, "dictations") – vollständig im Sandbox.
+    -->
+    <files-path
+        name="dictations"
+        path="dictations/" />
+</paths>
