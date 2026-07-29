@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,19 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
+
+// Release signing credentials are kept out of version control: they come from
+// keystore.properties (gitignored) or, for CI, from environment variables.
+// See keystore.properties.example.
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+
+fun signingValue(key: String, env: String): String? =
+    keystoreProperties.getProperty(key) ?: System.getenv(env)
 
 android {
     namespace = "com.meddiktat"
@@ -22,6 +37,20 @@ android {
         vectorDrawables { useSupportLibrary = true }
     }
 
+    signingConfigs {
+        create("release") {
+            val store = signingValue("storeFile", "MEDDIKTAT_STORE_FILE")
+            // Left unconfigured when no credentials are available; the release
+            // build then falls back to producing an unsigned APK.
+            if (store != null) {
+                storeFile = rootProject.file(store)
+                storePassword = signingValue("storePassword", "MEDDIKTAT_STORE_PASSWORD")
+                keyAlias = signingValue("keyAlias", "MEDDIKTAT_KEY_ALIAS")
+                keyPassword = signingValue("keyPassword", "MEDDIKTAT_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -29,6 +58,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release").takeIf { it.storeFile != null }
         }
     }
 

@@ -20,6 +20,34 @@ nicht, da Gradle eine Toolchain mit `javac` verlangt.
 Toolchain: Kotlin 2.0.20 · AGP 8.7.3 · compileSdk/targetSdk 35 · minSdk 26 ·
 Room 2.6.1 · Hilt 2.52 · Material 3 · JDK 17.
 
+### Release-Build und Signierung
+
+`./gradlew :app:assembleRelease` aktiviert R8 (Shrinking + Obfuskierung). Die
+Signierung ist optional konfiguriert:
+
+- **Ohne Zugangsdaten** entsteht `app-release-unsigned.apk`. Der Build schlägt
+  also nicht fehl, wenn jemand das Repository ohne Schlüssel klont.
+- **Mit Zugangsdaten** entsteht das signierte `app-release.apk`.
+
+Dazu `keystore.properties.example` nach `keystore.properties` kopieren und
+ausfüllen. Diese Datei sowie `*.jks` / `*.keystore` sind per `.gitignore`
+ausgeschlossen und dürfen **nicht** eingecheckt werden. Alternativ lassen sich
+die Werte über die Umgebungsvariablen `MEDDIKTAT_STORE_FILE`,
+`MEDDIKTAT_STORE_PASSWORD`, `MEDDIKTAT_KEY_ALIAS` und `MEDDIKTAT_KEY_PASSWORD`
+setzen, etwa in einer CI.
+
+Keystore erzeugen (Passwörter werden interaktiv erfragt und landen damit nicht
+in der Shell-History):
+
+```
+keytool -genkeypair -v -keystore meddiktat-release.jks \
+  -alias meddiktat -keyalg RSA -keysize 4096 -validity 10000
+```
+
+Der Keystore ist unersetzlich: geht er verloren, lässt sich eine bereits
+veröffentlichte App nicht mehr mit Updates versorgen. Getrennt vom Projekt und
+gesichert aufbewahren.
+
 ## Architekturübersicht
 
 Saubere Schichtung nach **MVVM + Repository Pattern**, Abhängigkeiten zeigen

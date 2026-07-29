@@ -10,3 +10,8 @@
 .cxx
 local.properties
 /app/build/
+
+# Release-Signierung: Keystore und Zugangsdaten gehoeren nie ins Repository.
+*.jks
+*.keystore
+/keystore.properties
